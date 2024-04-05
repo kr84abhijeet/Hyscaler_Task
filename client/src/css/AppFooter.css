@@ -18,10 +18,12 @@
     bottom: o;color:#535c87;
     user-select: none;
     font-size: 5rem;
+    text-align: right;
   }
   .link-wrapper{
     display: flex;
     gap:1.3rem;
+    text-align: center;
   
   }
   .link-wrapper div a{

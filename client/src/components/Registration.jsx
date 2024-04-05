@@ -11,6 +11,7 @@ function Registration() {
         e.preventDefault()
         axios.post('http://localhost:3001/register',{name,email,password})
         .then(res => {
+            alert('Registration successfully!');
             navigate('/login')
 
         })

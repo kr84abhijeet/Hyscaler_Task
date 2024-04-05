@@ -1,80 +1,92 @@
-import React, { useState } from 'react'
-import axios from 'axios'
-import { Link, useNavigate } from 'react-router-dom'
+// components/HolidayPackageForm.jsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import '../css/HolidayPackage.css'
 
-function HolidayPackage() {
-    const [name,setName] = useState('')
-    const [duration,setDuration] = useState('')
-    const [imageUrl,setImageUrl] = useState('')
+const HolidayPackageForm = () => {
+  const [name, setName] = useState('');
+  const [duration, setDuration] = useState('');
+  const [destination, setDestination] = useState('');
+  const [location, setLocation] = useState('');
+  const [amenities, setAmenities] = useState('');
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState('');
 
-
-    
-    const navigate = useNavigate()
-    const handleSubmit= (e) => {
-        e.preventDefault()
-        axios.post('http://localhost:3001/holiday/add',{name,duration ,image})
-        .then(res => {
-            console.log(res)
-
-        })
-        .catch(err => console.log(err))
-
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const response = await axios.get('http://localhost:3001/users');
+        setUsers(response.data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
     }
+    fetchUsers();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post('http://localhost:3001/holiday-packages', {
+        name,
+        duration: parseInt(duration),
+        destination,
+        location,
+        amenities: amenities.split(',').map(item => item.trim()),
+        userId: selectedUser
+      });
+      alert('Holiday package added successfully!');
+      // Reset form fields
+      setName('');
+      setDuration('');
+      setDestination('');
+      setLocation('');
+      setAmenities('');
+      setSelectedUser('');
+    } catch (error) {
+      console.error('Error adding holiday package:', error);
+      alert('Failed to add holiday package. Please try again.');
+    }
+  };
+
   return (
-    <div className="d-flex justify-content-center align-items-center bg-secondary vh-100">
-        <div className="bg-white p-3 rounded w-25">
-            <h2>Holiday Package</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label htmlFor="pacakge">
-                        <strong>package Name</strong>
-                    </label>
-                    <input 
-                    type="text"
-                    placeholder="Enter your Destination"
-                    autoComplete="off"
-                    name="email"
-                    className="form-control rounded-0"
-                    onChange={(e)=> setName(e.target.value)}
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="duration">
-                        <strong>Add Package Duration</strong>
-                    </label>
-                    <input
-                    type="email"
-                    placeholder="Add Duration"
-                    autoComplete="off"
-                    name="email"
-                    className="form-control rounded-0" 
-                    onChange={(e)=> setDuration(e.target.value)}
-                    />
-
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="image">
-                        <strong>Package Image</strong>
-                    </label>
-                    <input
-                    type="text"
-                    placeholder="Add an image"
-                    name="email"
-                    className="form-control rounded-0"
-                    onChange={(e)=> setImageUrl(e.target.value)}
-                    />
-
-                </div>
-                <button type="submit" className="btn btn-success w-100 rounded-0">
-                    ADD DETAILS
-                </button>
-            </form>
-            
+    <div>
+      <h2>Add Holiday Package</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Name:</label>
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
-
+        <div className="form-group">
+          <label>Duration (Nights):</label>
+          <input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} required />
+        </div>
+        <div className="form-group">
+          <label>Destination:</label>
+          <input type="text" value={destination} onChange={(e) => setDestination(e.target.value)} required />
+        </div>
+        <div className="form-group">
+          <label>Location:</label>
+          <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} />
+        </div>
+        <div className="form-group">
+          <label>Amenities :</label>
+          <input type="text" value={amenities} onChange={(e) => setAmenities(e.target.value)} />
+        </div>
+        <div className="form-group">
+          <label>Select User:</label>
+          <select value={selectedUser} onChange={(e) => setSelectedUser(e.target.value)}>
+            <option value="">Select User</option>
+            {users.map(user => (
+              <option key={user._id} value={user._id}>{user.name}</option>
+            ))}
+          </select>
+        </div>
+        <button type="submit">Add Holiday Package</button>
+      </form>
     </div>
-  )
-}
+  );
+};
 
-export default HolidayPackage
-
+export default HolidayPackageForm;

@@ -14,6 +14,7 @@ const Login = () => {
         e.preventDefault()
         axios.post('http://localhost:3001/login',{email,password})
         .then(res => {
+            alert('Login successfully!');
             console.log(res)
             if(res.data.Login) {
                 navigate("/dashboard")

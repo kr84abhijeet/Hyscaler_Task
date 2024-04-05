@@ -9,13 +9,15 @@ const Navbar = () => {
             <Link to="/ "className='navbar-brand'>Employee Dashboard</Link>
         </div>
         <div className='navbar-right'>
-            <Link to ="/sales" className='navbar-link'>Sales</Link>
+            <Link to ="/" className='navbar-link'>Sales</Link>
             <Link to ="/" className='navbar-link'>Dashboard</Link>
+            <Link to ="/sales" className='navbar-link'>SalesForm</Link>
             
-            <Link to ="/holidaypackage" className='navbar-link'>Holiday Package</Link>
+            <Link to ="/holiday-package" className='navbar-link'>Holiday Package</Link>
+            <Link to ="/packages" className='navbar-link'>Holiday Package List</Link>
             <Link to ="/register" className='navbar-link'>Register Employee</Link>
             <Link to ="/login" className='navbar-link'>Login</Link>
-            <Link to ="/contact" className='navbar-link'>Contact US</Link>
+            <Link to ="/send-mail" className='navbar-link'>Notification</Link>
         </div>
     </nav>
   )
