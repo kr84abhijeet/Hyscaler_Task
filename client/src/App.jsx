@@ -10,8 +10,8 @@ import AppFooter from './components/AppFooter'
 import Sidemenu from './components/Sidemenu'
 import SalesForm from './components/SalesForm'
 import HolidayPackage from './components/HolidayPackage'
-import AdminPanel from './components/EmailNotification'
 import HolidayPackageList from './components/HolidayPackageList'
+import EmployeeNotificationForm from './components/EmailNotification'
 
 
 
@@ -29,7 +29,7 @@ function App() {
       <Route path='/dashboard' element={<Dashboard />}></Route>
       <Route path='/holiday-package' element={<HolidayPackage />}></Route>
       <Route path='/packages' element={<HolidayPackageList />}></Route>
-      <Route path='/send-mail' element={<AdminPanel />}></Route>
+      <Route path='/send-mail' element={<EmployeeNotificationForm />}></Route>
 
       
       <Route path='/sales' element={<SalesForm />}></Route>
