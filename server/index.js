@@ -6,8 +6,9 @@ import cookieParser from 'cookie-parser'
 import EmployeeModel from './models/Employe.js'
 import Sales from './models/Sales.js'
 import HolidayPackage from './models/HolidayPackage.js'
+import Email from './models/EmailNotification.js'
 import nodemailer from 'nodemailer'
-// import Email from './models/EmailNotification.js'
+
 
 const app = express()
 app.use(express.json())
@@ -217,46 +218,31 @@ app.post('/calculate-incentive', async (req, res) => {
     },
     
   });
-//   app.post('/send-email',async(req,res) => {
-//     const { to, subject, performanceMetrics, incentiveDetails } = req.body;
-
-//   try {
+  app.post('/send-mail', async (req, res) => {
+    const { recipient, subject, body } = req.body;
+    try {
     
-//     // const emailBody = `
-//     //   <p>Hello,</p>
-//     //   <p>Your performance metrics for the day:</p>
-//     //   <ul>
-//     //     <li>Total Sales: ${performanceMetrics.sales}</li>
-//     //     <li>Incentive Percentage: ${incentiveDetails.incentivePercentage}%</li>
-//     //     <li>Bonus: ${incentiveDetails.bonus}</li>
-//     //     <li>Additional Benefits: ${incentiveDetails.additionalBenefits}</li>
-//     //     <li>Incentive Amount: ${incentiveDetails.incentiveAmount}</li>
-//     //   </ul>
-//     //   <p>Thank you.</p>
-//     // `;
-
-//     // Send email
-//     await transporter.sendMail({
-//       from: 'kumarideppika9931@gmail.com',
-//       to: to,
-//       subject: subject,
-//       html: emailBody
-//     });
-
-    
-//     const email = new Email({
-//       to,
-//       subject,
-//       message: emailBody
-//     });
-//     await email.save();
-
-//     res.json({ success: true, message: 'Email sent successfully' });
-//   } catch (error) {
-//     console.error('Error sending email:', error);
-//     res.status(500).json({ success: false, message: 'Failed to send email' });
-//   }
-// });
+      const newEmail = new Email({
+        recipient,
+        subject,
+        body
+      });
+      await newEmail.save();
+  
+      // Send email
+      await transporter.sendMail({
+        from: 'kumarideppika9931@gmail.com',
+        to: recipient,
+        subject: subject,
+        text: body
+      });
+  
+      res.status(200).send('Email sent successfully');
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error sending email');
+    }
+  });
   
 app.listen(3001, ()=> {
     console.log("Server is running")
