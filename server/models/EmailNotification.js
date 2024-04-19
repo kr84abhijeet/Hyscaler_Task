@@ -7,4 +7,8 @@ const EmailSchema = new mongoose.Schema({
 });
 
 const Email = mongoose.model('Email', EmailSchema);
+<<<<<<< HEAD
 export default Email
+=======
+export default Email
+>>>>>>> 856196bc1a42d85e4aa485855109697a5f41c45e

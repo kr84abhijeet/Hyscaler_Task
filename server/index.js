@@ -9,10 +9,13 @@ import Incentive from './models/Incentive.js'
 import HolidayPackage from './models/HolidayPackage.js'
 import Email from './models/EmailNotification.js'
 import nodemailer from 'nodemailer'
+<<<<<<< HEAD
 import { MongoClient } from 'mongodb';
 import SalesTarget from './models/SalesTarget.js'
 
 
+=======
+>>>>>>> 856196bc1a42d85e4aa485855109697a5f41c45e
 
 
 const app = express()
@@ -319,6 +322,7 @@ const renewToken = (req, res) => {
 app.get('/dashboard', verifyUser, (req, res) => {
   return res.json({ valid: true, message: "Authorized" })
 })
+<<<<<<< HEAD
 
 app.post('/sales', async (req, res) => {
   const { sales, userId } = req.body;
@@ -468,4 +472,132 @@ app.post('/send-mail', async (req, res) => {
 
 app.listen(3001, () => {
   console.log("Server is running")
+=======
+app.post('/calculate-incentive', async (req, res) => {
+    const { sales } = req.body;
+  
+    try {
+    
+      const newSalesEntry = await Sales.create({ sales });
+      console.log('New sales entry created:', newSalesEntry);
+  
+      
+      const incentive = calculateIncentive(sales);
+  
+      
+      res.json(incentive);
+    } catch (error) {
+      console.error('Error creating sales entry:', error);
+      res.status(500).json({ error: 'Failed to calculate incentive' });
+    }
+  });
+  app.post('/holiday-packages', async (req, res) => {
+    const { name, duration, destination, location, amenities ,employeeId} = req.body;
+  
+    try {
+      const newPackage = await HolidayPackage.create({
+        name,
+        duration,
+        destination,
+        location,
+        amenities,
+        employee: employeeId
+      });
+      res.status(201).json(newPackage);
+    } catch (error) {
+      console.error('Error creating holiday package:', error);
+      res.status(500).json({ error: 'Failed to create holiday package' });
+    }
+  });
+  app.get('/packages', async (req, res) => {
+    try {
+      const packages = await HolidayPackage.find();
+      res.json(packages);
+    } catch (error) {
+      console.error('Error fetching holiday packages:', error);
+      res.status(500).json({ error: 'Failed to fetch holiday packages' });
+    }
+  });
+  
+  // Route to get a single holiday package by ID
+  app.get('/packages/:id', async (req, res) => {
+    try {
+      const holidaypackage = await HolidayPackage.findById(req.params.id);
+      if (!holidaypackage) {
+        return res.status(404).json({ error: 'Holiday package not found' });
+      }
+      res.json(holidaypackage);
+    } catch (error) {
+      console.error('Error fetching holiday package:', error);
+      res.status(500).json({ error: 'Failed to fetch holiday package' });
+    }
+  });
+  
+  // Route to update a holiday package
+  app.put('/packages/:id', async (req, res) => {
+    try {
+      const updatedPackage = await HolidayPackage.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      if (!updatedPackage) {
+        return res.status(404).json({ error: 'Holiday package not found' });
+      }
+      res.json(updatedPackage);
+    } catch (error) {
+      console.error('Error updating holiday package:', error);
+      res.status(500).json({ error: 'Failed to update holiday package' });
+    }
+  });
+  
+  // Route to delete a holiday package
+  app.delete('/packages/:id', async (req, res) => {
+    try {
+      const deletedPackage = await HolidayPackage.findByIdAndDelete(req.params.id);
+      if (!deletedPackage) {
+        return res.status(404).json({ error: 'Holiday package not found' });
+      }
+      res.json({ message: 'Holiday package deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting holiday package:', error);
+      res.status(500).json({ error: 'Failed to delete holiday package' });
+    }
+  });
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false,
+    auth:{
+      user: 'kumarideppika9931@gmail.com',
+      pass: 'Deep2002@dk'
+    },
+    
+  });
+  app.post('/send-mail', async (req, res) => {
+    const { recipient, subject, body } = req.body;
+    try {
+    
+      const newEmail = new Email({
+        recipient,
+        subject,
+        body
+      });
+      await newEmail.save();
+  
+      // Send email
+      await transporter.sendMail({
+        from: 'kumarideppika9931@gmail.com',
+        to: recipient,
+        subject: subject,
+        text: body
+      });
+  
+      res.status(200).send('Email sent successfully');
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error sending email');
+    }
+  });
+  
+app.listen(3001, ()=> {
+    console.log("Server is running")
+>>>>>>> 856196bc1a42d85e4aa485855109697a5f41c45e
 })
