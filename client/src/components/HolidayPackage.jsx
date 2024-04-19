@@ -1,4 +1,4 @@
-// components/HolidayPackageForm.jsx
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../css/HolidayPackage.css'
@@ -37,7 +37,7 @@ const HolidayPackageForm = () => {
         userId: selectedUser
       });
       alert('Holiday package added successfully!');
-      // Reset form fields
+      
       setName('');
       setDuration('');
       setDestination('');

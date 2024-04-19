@@ -1,58 +1,66 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../css/EmailNotification.css'
+import '../css/EmailNotification.css';
 
-const PerformanceEmailSender = () => {
-  const [to, setTo] = useState('');
-  const [subject, setSubject] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
+const EmployeeNotificationForm = () => {
+  const [emailDetails, setEmailDetails] = useState({
+    recipient: '',
+    subject: '',
+    body: ''
+  });
+  const [error, setError] = useState('');
+
+  const handleChange = (e) => {
+    setEmailDetails({
+      ...emailDetails,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const sendEmail = async () => {
-    setIsLoading(true);
-    setError(null);
-    setSuccessMessage(null);
-
+    setError('');
     try {
-      const response = await axios.post('http://localhost:3001/send-email', {
-        to,
-        subject,
-        performanceMetrics: {
-          sales: 100, // Example value, replace with actual performance metrics
-        },
-        incentiveDetails: {
-          incentivePercentage: 5, // Example value, replace with actual incentive details
-          bonus: 1000,
-          additionalBenefits: 'Eligibility for a holiday package',
-          incentiveAmount: 10500
-        }
+      const response = await axios.post('/send-email', emailDetails);
+      console.log(response.data);
+      
+      setEmailDetails({
+        recipient: '',
+        subject: '',
+        body: ''
       });
-
-      setSuccessMessage(response.data.message);
     } catch (error) {
-      setError(error.response?.data?.message || 'Failed to send email');
-    } finally {
-      setIsLoading(false);
+      setError('Error sending email');
+      console.error(error);
     }
   };
 
   return (
-    <div>
-      <h2>Send Performance Email</h2>
-      <div>
-        <label>Email:</label>
-        <input type="email" value={to} onChange={(e) => setTo(e.target.value)} />
-      </div>
-      <div>
-        <label>Subject:</label>
-        <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} />
-      </div>
-      <button onClick={sendEmail} disabled={isLoading}>Send Email</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+    <div className="employee-notification-form">
+      <h2>Employee Notification System</h2>
+      <input
+        type="text"
+        name="recipient"
+        placeholder="Recipient Email"
+        value={emailDetails.recipient}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="subject"
+        placeholder="Subject"
+        value={emailDetails.subject}
+        onChange={handleChange}
+      />
+      <textarea
+        name="body"
+        placeholder="Body"
+        value={emailDetails.body}
+        onChange={handleChange}
+      ></textarea>
+      <button onClick={sendEmail}>Send Email</button>
+      {error && <div className="error">{error}</div>}
     </div>
   );
 };
 
-export default PerformanceEmailSender;
+export default EmployeeNotificationForm;

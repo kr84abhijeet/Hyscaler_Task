@@ -1,59 +1,38 @@
-
-
+// components/SalesForm.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../css/SalesForm.css'
+import '../css/SalesForm.css';
 
 function SalesForm() {
+  const [userId, setUserId] = useState('');
   const [sales, setSales] = useState('');
-  const [incentive, setIncentive] = useState(null);
-  const [error, setError] = useState('');
-
-  const handleSalesChange = (e) => {
-    setSales(e.target.value);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await axios.post('http://localhost:3001/calculate-incentive', { sales: parseInt(sales) });
-      setIncentive(response.data);
-      setError('');
+      await axios.post('http://localhost:3001/sales', { userId, sales });
+      alert('Sales data submitted successfully!');
     } catch (error) {
-      setError('Error calculating incentive. Please try again.');
-      console.error(error);
+      console.error('Error submitting sales data:', error);
+      alert('Failed to submit sales data. Please try again.');
     }
   };
 
   return (
-    
-    <div className="form-container">
-      <h2>Sales Incentive Calculator</h2>
+    <div className="sales-form-container">
+      <h2>Enter Sales Data</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="sales">Sales:</label>
-          <input type="number" id="sales" value={sales} onChange={handleSalesChange} />
+          <label>User ID:</label>
+          <input type="text" value={userId} onChange={(e) => setUserId(e.target.value)} />
         </div>
-        <button type="submit">Calculate Incentive</button>
-      </form>
-      {incentive && (
         <div>
-          <h3>Incentive Details:</h3>
-          <p>Incentive Percentage: {incentive.incentivePercentage}%</p>
-          <p>Bonus: ${incentive.bonus}</p>
-          <p>Additional Benefits: {incentive.additionalBenefits}</p>
-          <p>Total Incentive Amount: ${incentive.incentiveAmount}</p>
+          <label>Sales:</label>
+          <input type="text" value={sales} onChange={(e) => setSales(e.target.value)} />
         </div>
-      )}
-      {error && <p className="error-message">{error}</p>}
-      
-
-
+        <button type="submit">Submit</button>
+      </form>
     </div>
-    
-
-    
   );
 }
 

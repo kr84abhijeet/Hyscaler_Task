@@ -1,0 +1,42 @@
+.ui-matrix-container {
+  width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.ui-matrix-container h2 {
+  margin-bottom: 20px;
+}
+
+.ui-matrix-container input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.ui-matrix-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ui-matrix-container th,
+.ui-matrix-container td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.ui-matrix-container th {
+  background-color: #f2f2f2;
+}
+
+.ui-matrix-container tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.ui-matrix-container tr:hover {
+  background-color: #ddd;
+}
